@@ -7,8 +7,9 @@ class CharTokenizer:
         for i, char in enumerate(chars):
             self.vocab[char] = i
             self.re_vocab[i] = char
-        self.vocab["\ufffd"] = len(self.vocab)
-        self.re_vocab[len(self.vocab)] = "\ufffd"
+        vocab_len = len(self.vocab)
+        self.vocab["\ufffd"] = vocab_len
+        self.re_vocab[vocab_len] = "\ufffd"
 
     @property
     def vocab_size(
@@ -32,7 +33,7 @@ class CharTokenizer:
         encode_list = []
         for char in s:
             if char not in self.vocab:
-                encode_list.append(self.vocab_size)
+                encode_list.append(self.vocab["\ufffd"])
             else:
                 encode_list.append(self.vocab[char])
         return encode_list
@@ -41,7 +42,7 @@ class CharTokenizer:
         """
         对ids列表展开解码，转换为原字符串。
 
-        遇到id为len(self.vocab) + 1的id统一解码为：\ufffd
+        遇到id为len(self.vocab)的id统一解码为：\ufffd
 
         Args:
         参数1：id列表
@@ -51,10 +52,5 @@ class CharTokenizer:
         """
         decode_str = ""
         for id in ids:
-            tmp_str_len = len(decode_str)
-            for k, v in self.vocab.items():
-                if v == id:
-                    decode_str += k
-            if tmp_str_len == len(decode_str):
-                decode_str += "\ufffd"
+            decode_str += self.re_vocab[id]
         return decode_str

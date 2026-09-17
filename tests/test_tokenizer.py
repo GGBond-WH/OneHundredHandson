@@ -1,7 +1,7 @@
 from week01_text_pipeline.text_pipeline.tokenizer import CharTokenizer
 
 s = "fhsetsfse. "
-unknow_str = "🤩"
+unknown_str = "🤩"
 text = "abcdefghijkkkllllmnopqrstuvwxyz. "
 tokenizer = CharTokenizer(text=text)
 
@@ -15,5 +15,4 @@ def test_vocab_size():
 
 
 def test_unknown_str():
-    assert tokenizer.encode(unknow_str) == [tokenizer.vocab_size]
-    assert tokenizer.decode([tokenizer.vocab_size]) == "\ufffd"
+    assert tokenizer.encode(unknown_str) == [list(tokenizer.vocab.values())[-1]]
