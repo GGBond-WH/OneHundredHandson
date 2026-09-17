@@ -16,4 +16,4 @@ def test_vocab_size():
 
 def test_unknown_str():
     assert tokenizer.encode(unknow_str) == [tokenizer.vocab_size]
-    assert tokenizer.decode([tokenizer.vocab_size + 1]) == "\ufffd"
+    assert tokenizer.decode([tokenizer.vocab_size]) == "\ufffd"
