@@ -1,6 +1,8 @@
 .venv
 __pycache__/
 .pytest_cache/
-.ruff_cache/*.pyc
+.ruff_cache/
+*.pyc
 checkpoints/
 data/*.txt
+.vscode/
