@@ -1,6 +1,9 @@
 class CharTokenizer:
+    """
+    unk 的 id 是 len(self.vocab)-1；encode 遇到不在表里的字符返回 len(self.vocab)-1；decode 遇到不在表里的 id 返回"\ufffd"；vocab_size 等于 len(self.vocab)。
+    """
+
     def __init__(self, text: str) -> None:
-        self.text = text
         chars = sorted(set(text))
         self.vocab = {}
         self.re_vocab = {}
@@ -21,7 +24,7 @@ class CharTokenizer:
         """
         编码字符串，转换为id列表。
 
-        遇到vocab里面没有的字符，统一id为：len(self.vocab)
+        遇到vocab里面没有的字符，统一id为：len(self.vocab) - 1
 
         Args:
         参数1：需要进行编码的字符串s
@@ -42,7 +45,7 @@ class CharTokenizer:
         """
         对ids列表展开解码，转换为原字符串。
 
-        遇到id为len(self.vocab)的id统一解码为：\ufffd
+        遇到id为len(self.vocab)-1以及不在re_vocab里面的id的id统一解码为：\ufffd
 
         Args:
         参数1：id列表
@@ -52,5 +55,8 @@ class CharTokenizer:
         """
         decode_str = ""
         for id in ids:
-            decode_str += self.re_vocab[id]
+            if id not in self.re_vocab:
+                decode_str += "\ufffd"
+            else:
+                decode_str += self.re_vocab[id]
         return decode_str
