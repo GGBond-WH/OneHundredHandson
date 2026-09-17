@@ -15,9 +15,7 @@ class CharTokenizer:
         self.re_vocab[vocab_len] = "\ufffd"
 
     @property
-    def vocab_size(
-        self,
-    ) -> int:
+    def vocab_size(self) -> int:
         return len(self.vocab)
 
     def encode(self, s: str) -> list[int]:
