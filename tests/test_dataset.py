@@ -1,5 +1,3 @@
-import operator
-
 import pytest
 
 from week01_text_pipeline.text_pipeline.dataset import TextDataset, batch_iterator
@@ -21,6 +19,16 @@ def test_dataset_len(get_dataset):
 
 
 def test_iterator_order(get_dataset):
-    assert all(
-        map(operator.eq, batch_iterator(get_dataset, 3), batch_iterator(get_dataset, 3))
-    )
+    a = list(batch_iterator(get_dataset, 3, seed=1))
+    b = list(batch_iterator(get_dataset, 3))
+    assert a != b
+    a = list(batch_iterator(get_dataset, 3))
+    b = list(batch_iterator(get_dataset, 3))
+    assert a == b
+
+
+def test_ids_len_short():
+    try:
+        TextDataset([0], 2)
+    except ValueError:
+        pytest.raises(ValueError)
