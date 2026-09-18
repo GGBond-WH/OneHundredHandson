@@ -29,11 +29,14 @@ def batch_iterator(
 ):
 
     index = [i for i in range(len(dataset))]
-    random.Random(seed)
+    rng = random.Random(seed)
     if shuffle:
-        random.shuffle(index)
-    for i in range(0, len(index), batch_size):
+        rng.shuffle(index)
+    for i in range(len(index)):
         batch = []
-        for j in range(i, i + batch_size):
-            batch.append(dataset[index[j]])
+        if i + batch_size + 1 < len(dataset.ids):
+            for j in range(i, i + batch_size):
+                batch.append(dataset[index[j]])
+        else:
+            continue
         yield batch
