@@ -1,3 +1,6 @@
+import random
+
+
 class TextDataset:
     def __init__(self, ids: list[int], block_size: int) -> None:
         """
@@ -24,13 +27,13 @@ class TextDataset:
 def batch_iterator(
     dataset: TextDataset, batch_size: int, shuffle: bool = True, seed: int = 0
 ):
-    import random
 
-    batch = []
     index = [i for i in range(len(dataset))]
-    random.seed(seed)
+    random.Random(seed)
     if shuffle:
         random.shuffle(index)
-    for i in range(0, len(index), 2):
-        batch.append(dataset[index[i]])
+    for i in range(0, len(index), batch_size):
+        batch = []
+        for j in range(i, i + batch_size):
+            batch.append(dataset[index[j]])
         yield batch

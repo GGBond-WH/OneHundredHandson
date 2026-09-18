@@ -24,6 +24,7 @@ def test_iterator_order(get_dataset):
     assert a != b
     a = list(batch_iterator(get_dataset, 3))
     b = list(batch_iterator(get_dataset, 3))
+    print(a)
     assert a == b
 
 
