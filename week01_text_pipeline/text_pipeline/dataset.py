@@ -32,11 +32,22 @@ def batch_iterator(
     rng = random.Random(seed)
     if shuffle:
         rng.shuffle(index)
-    for i in range(len(index)):
+    for i in range(0, len(index), batch_size):
+        # index[0], index[1], index[2]加进去
         batch = []
-        if i + batch_size + 1 < len(dataset.ids):
-            for j in range(i, i + batch_size):
-                batch.append(dataset[index[j]])
-        else:
-            continue
-        yield batch
+        for j in range(i, i + batch_size):
+            if j + batch_size > len(index):
+                break
+            batch.append(dataset[index[j]])
+        if batch != []:
+            yield batch
+
+
+ids = [0, 1, 2, 3, 4, 5, 6]
+block = 2
+batch = 2
+dataset = TextDataset(ids, block)
+batch_list = list(batch_iterator(dataset, batch, shuffle=True))
+print(batch_list)
+print([dataset[i] for i in range(len(dataset))])
+# assert sorted(batch_list) == [dataset[i] for i in range(len(dataset))]
