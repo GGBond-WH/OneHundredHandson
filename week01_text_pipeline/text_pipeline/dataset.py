@@ -17,8 +17,6 @@ class TextDataset:
                 self.ids[i : i + self.block_size],
                 self.ids[i + 1 : i + 1 + self.block_size],
             )
-        elif i + self.block_size + 1 > len(self.ids):
-            return ([0, 0], [0, 0])
         else:
             raise IndexError("out of index!")
 
@@ -29,10 +27,10 @@ def batch_iterator(
     import random
 
     batch = []
-    index = [i for i in range(batch_size)]
+    index = [i for i in range(len(dataset))]
     random.seed(seed)
     if shuffle:
         random.shuffle(index)
-    for i in index:
-        batch.append(dataset[i])
-    yield batch
+    for i in range(0, len(index), 2):
+        batch.append(dataset[index[i]])
+        yield batch
