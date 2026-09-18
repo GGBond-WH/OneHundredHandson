@@ -28,7 +28,5 @@ def test_iterator_order(get_dataset):
 
 
 def test_ids_len_short():
-    try:
+    with pytest.raises(ValueError):
         TextDataset([0], 2)
-    except ValueError:
-        pytest.raises(ValueError)
