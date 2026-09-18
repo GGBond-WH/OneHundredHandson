@@ -27,7 +27,9 @@ class TextDataset:
 def batch_iterator(
     dataset: TextDataset, batch_size: int, shuffle: bool = True, seed: int = 0
 ):
-
+    """
+    不够batch size时，尾巴直接切掉。
+    """
     index = [i for i in range(len(dataset))]
     rng = random.Random(seed)
     if shuffle:
