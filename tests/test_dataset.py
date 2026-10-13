@@ -50,4 +50,5 @@ def test_index_error():
     dataset = TextDataset(ids, block)
     with pytest.raises(IndexError):
         dataset[5]
+    with pytest.raises(IndexError):
         dataset[-1]
