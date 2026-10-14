@@ -1,5 +1,7 @@
 import random
 
+import torch
+
 
 class TextDataset:
     def __init__(self, ids: list[int], block_size: int) -> None:
@@ -14,11 +16,13 @@ class TextDataset:
     def __len__(self) -> int:
         return len(self.ids) - self.block_size
 
-    def __getitem__(self, i: int) -> tuple[list[int], list[int]]:
+    def __getitem__(self, i: int) -> torch.Tensor:
         if i >= 0 and i + self.block_size + 1 <= len(self.ids):
-            return (
-                self.ids[i : i + self.block_size],
-                self.ids[i + 1 : i + 1 + self.block_size],
+            return torch.tensor(
+                (
+                    self.ids[i : i + self.block_size],
+                    self.ids[i + 1 : i + 1 + self.block_size],
+                )
             )
         else:
             raise IndexError("out of index!")

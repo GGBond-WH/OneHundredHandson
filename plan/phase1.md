@@ -174,7 +174,8 @@ class BigramLM(nn.Module):
 ```
 把 Week 1 的 dataset 改成返回 `torch.Tensor`（`torch.tensor(ids, dtype=torch.long)`），batch 用 `torch.stack`。
 
-【测】`logits.shape == (B, T, V)`；初始化时 `loss ≈ ln(V)`（容差 0.5——这是个很有用的 sanity check，以后每个模型都写）；`targets=None` 时 loss 为 None。
+【测】`logits.shape == (B, T, V)`（有 targets 和没有 targets 两种调用都测）；初始化时 `loss ≈ ln(V)`（这是个很有用的 sanity check，以后每个模型都写）；`targets=None` 时 loss 为 None。
+> **前提（2026-10-13 更正）**：`loss ≈ ln(V)` 只在初始 logits 接近 0、即模型"一无所知"时成立。`nn.Embedding` 默认初始化 std≈1，实测 V=65 时初始 loss 均值 4.64（ln 65 = 4.17），200 个 seed 里只有 58% 落在 ±0.5 内——测试会时红时绿。把表初始化成小 std（如 `nn.init.normal_(..., std=0.02)`）后，所有 seed 都在 4.166–4.183，容差 0.1 即可。经验式：logits 方差为 σ² 时初始 loss ≈ ln(V) + σ²/2。
 
 【做】(30 min) Tensor Puzzles 8–14。
 

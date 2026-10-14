@@ -109,7 +109,7 @@ class GPT(nn.Module):
     # tok_emb [V,C] + pos_emb [block_size,C] -> N×Block -> ln_f -> lm_head [C,V]
     def forward(self, idx, targets=None) -> (logits [B,T,V], loss | None)
 ```
-【测】shape；初始 loss ≈ ln(V)；模型级因果性（改未来 token 不影响过去位置 logits）。
+【测】shape；初始 loss ≈ ln(V)（前提同 Day 9：初始 logits 要接近 0，否则会偏高 σ²/2）；模型级因果性（改未来 token 不影响过去位置 logits）。
 
 ### Day 24（周三）· 训练 TinyGPT
 

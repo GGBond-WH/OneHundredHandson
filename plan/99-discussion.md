@@ -46,3 +46,8 @@
 1. Day 1 按 `phase1.md` 建实验室，记下空白文件延迟基线。
 2. Day 14 复盘时用两周数据决定是否放慢（这是唯一需要真实数据才能定的参数）。
 3. Gate 3 后回看 `99-discussion.md` 的"Llama 风格 vs GPT-2 风格"分歧，决定 capstone 的 GQA 是 required 还是 optional。
+
+## 修订记录
+
+- **2026-10-13 · Day 9 初始 loss 测试**：原文"初始化时 loss ≈ ln(V)，容差 0.5"对 `nn.Embedding` 默认初始化（std≈1）不成立。实测 V=65：初始 loss 均值 4.64，200 个 seed 中 42% 超出 ±0.5，测试不稳定。改为写明前提：初始 logits 需接近 0（小 std 初始化，如 0.02），此时容差 0.1 稳定通过。Day 23 同步加注。
+
