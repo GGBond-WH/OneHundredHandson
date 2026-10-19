@@ -185,11 +185,12 @@ class BigramLM(nn.Module):
 
 【写】`mini_lm/train.py`
 - 数据：encode 全文 → 90/10 切 train/val → `get_batch(split)` 随机采样 `[B,T]`（用 `torch.randint`）
-- `AdamW(lr=1e-3)`；循环 N 步；每 100 步用 `torch.no_grad()` 估计 train/val loss
+- `AdamW(lr=1e-2)`；循环 3000 步，**每一步都重新随机取一个 batch**；每 100 步用 `torch.no_grad()` 估计 train/val loss
+  （2026-10-14 更正：原写 `lr=1e-3`。Bigram 只有一张表，大学习率没问题；实测 1e-3 跑 3000 步 val 只到 2.66–2.80，1e-2 在 1000 步就到 2.5，接近 Bigram 下限 2.49。Week 4 的 GPT 仍用 3e-4。）
 - `device` 参数：`"cpu"` / `"mps"`；所有 tensor `.to(device)`
 - 先在 CPU 上跑通，再切 MPS（R8）
 
-【测】**overfit one batch**：固定一个 batch 训练 200 步，loss 必须降到远低于初始（如 < 初始的 60%）。这条测试以后每个模型都要有。
+【测】**overfit one batch**：固定**同一个** batch 反复训练 200 步，loss 必须降到远低于初始（如 < 初始的 60%）。这条测试以后每个模型都要有。（用 `lr=1e-2`：实测 20 个 seed 都降到初始的 0.51–0.52；用 1e-3 只降到 0.93，这条测试必红。）
 
 【做】(30 min) Tensor Puzzles 15–21。统计：独立完成几题？目标 ≥15/21；其余能解释参考解法。
 
