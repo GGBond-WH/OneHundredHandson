@@ -20,8 +20,8 @@ class TextDataset:
         if i >= 0 and i + self.block_size + 1 <= len(self.ids):
             return torch.tensor(
                 (
-                    self.ids[i : i + self.block_size],
-                    self.ids[i + 1 : i + 1 + self.block_size],
+                    self.ids[i : i + self.block_size],  # 输入
+                    self.ids[i + 1 : i + 1 + self.block_size],  # target输出
                 )
             )
         else:

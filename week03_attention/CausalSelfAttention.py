@@ -29,8 +29,14 @@ class CausalSelfAttention(nn.Module):
         mask = torch.ones(block_size, block_size)
         mask = torch.tril(mask)
         self.register_buffer("tril", mask)
+        self.attn_dropout = nn.Dropout(p=dropout)
+        self.resid_dropout = nn.Dropout(p=dropout)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self, x: torch.Tensor, option_test: bool = False
+    ) -> (
+        torch.Tensor | tuple[torch.Tensor, torch.Tensor]
+    ):  # option_test的作用是给测试用的，可能需要返回某些局部变量值
         x = self.Linear3C(x)
         q, k, v = torch.chunk(x, 3, dim=-1)
         B, T, C = q.shape
@@ -40,8 +46,10 @@ class CausalSelfAttention(nn.Module):
         wei = q @ k.transpose(-1, -2) * self.D**-0.5  # [B, H, T, T]
         wei = wei.masked_fill(self.tril[:T, :T] == 0, float("-inf"))
         wei = torch.softmax(wei, dim=-1)
+        wei = self.attn_dropout(wei)
         out = wei @ v  # [B, H, T, D]
         out = out.transpose(1, 2).contiguous()
         out = out.view(B, T, C)
         out = self.Linearend(out)  # [B, T, C]
-        return out
+        out = self.resid_dropout(out)
+        return (out, wei) if option_test else out

@@ -20,6 +20,10 @@ class CausalSelfAttention(nn.Module):
         q = self.wq(x)  # q.shape: [B, T, D]
         k = self.wk(x)  # k.shape: [B, T, D]
         v = self.wv(x)  # v.shape: [B, T, D]
+        out = self.com_loop(q, k, v)
+        return out
+
+    def com_loop(self, q, k, v):
         _, T, D = q.shape
         wei = q @ k.transpose(1, 2) * D**-0.5  # wei.shape: [B, T, T]
         wei = wei.masked_fill(self.tril[:T, :T] == 0, float("-inf"))
